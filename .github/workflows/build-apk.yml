@@ -43,8 +43,8 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
         with:
-          api-versions: '34,35'
-          build-tools-version: '34.0.0'
+          packages: 'platforms;android-34 platforms;android-35 build-tools;34.0.0 platform-tools'
+          accept-android-sdk-licenses: true
 
       - name: Install dependencies
         run: npm ci
@@ -67,11 +67,25 @@ jobs:
           echo -e "\n8933bad161af4d5153f8f1d871bbd900b3e36bf6" > $ANDROID_SDK_ROOT/licenses/android-sdk-preview-license
           echo -e "\n8933bad161af4d5153f8f1d871bbd900b3e36bf6" > $ANDROID_SDK_ROOT/licenses/google-gms-license-agreement
 
+      - name: Debug - List SDK contents
+        run: |
+          echo "=== ANDROID_SDK_ROOT: $ANDROID_SDK_ROOT ==="
+          ls -la "$ANDROID_SDK_ROOT" || echo "SDK root not found"
+          echo "=== Build Tools ==="
+          ls -la "$ANDROID_SDK_ROOT/build-tools" 2>/dev/null || echo "build-tools not found"
+          echo "=== Platforms ==="
+          ls -la "$ANDROID_SDK_ROOT/platforms" 2>/dev/null || echo "platforms not found"
+          echo "=== Project android dir ==="
+          ls -la android/ | head -20
+
       - name: Build APK (Release)
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon
+          ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log
+          exit_code=${PIPESTATUS[0]}
+          echo "Gradle exit code: $exit_code"
+          exit $exit_code
 
       - name: Upload APK artifact
         if: success()
@@ -95,7 +109,10 @@ jobs:
         if: failure()
         run: |
           cd android
-          ./gradlew assembleDebug --no-daemon
+          echo "=== Release build failed, attempting debug build ==="
+          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee build-debug.log || true
+          echo "=== Checking for APK files anywhere in build/ ==="
+          find build -name "*.apk" -type f 2>/dev/null | head -20 || echo "No APKs found"
 
       - name: Upload Debug APK
         if: failure()
