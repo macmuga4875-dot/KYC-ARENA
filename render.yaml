@@ -1,6 +1,6 @@
 services:
   # PostgreSQL Database
-  - type: postgres
+  - type: postgresql
     name: kyc-db
     plan: free
     ipAllowList: []
@@ -8,7 +8,7 @@ services:
     dbName: kyc_arena
     user: kyc_user
     pass: changeme
-    postgresMajorVersion: 15
+  version: 15
 
   # Backend API + Frontend Server
   - type: web
