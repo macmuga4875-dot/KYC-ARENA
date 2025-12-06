@@ -7,10 +7,8 @@ services:
     region: oregon
     dbName: kyc_arena
     user: kyc_user
-    pass: ${DB_PASSWORD}
+    pass: changeme
     postgresMajorVersion: 15
-    preDeployCommand: ""
-    # Database is created automatically; no need for migrations at startup
 
   # Backend API + Frontend Server
   - type: web
@@ -36,12 +34,3 @@ services:
         value: "/api"
     healthCheckPath: /
     autoDeploy: true
-
-env:
-  # Environment variables to be set before deployment
-  # Note: DB_PASSWORD should be set in Render dashboard as a secret
-  - key: DB_PASSWORD
-    isSecret: true
-    scope: service
-    services:
-      - kyc-db
