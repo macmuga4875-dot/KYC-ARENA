@@ -1,12 +1,12 @@
 services:
-  - type: postgres
+  - type: postgresql
     name: kyc-db
     plan: free
     region: oregon
     dbName: kyc_arena
     user: kyc_user
     pass: changeme
-    postgresMajorVersion: 15
+  version: 15
 
   - type: web
     name: kyc-arena-api
