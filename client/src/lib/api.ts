@@ -469,14 +469,14 @@ export function useUpdateExchangePrice() {
 
 // Portal Status API
 export async function getPortalStatus(): Promise<{ isOpen: boolean }> {
-  const res = await fetch(`${API_BASE}/settings/portal-status`, {
+  const res = await apiFetch(`/settings/portal-status`, {
     credentials: "include",
   });
   return handleResponse(res);
 }
 
 export async function setPortalStatus(isOpen: boolean): Promise<{ isOpen: boolean }> {
-  const res = await fetch(`${API_BASE}/settings/portal-status`, {
+  const res = await apiFetch(`/settings/portal-status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ isOpen }),
@@ -486,7 +486,7 @@ export async function setPortalStatus(isOpen: boolean): Promise<{ isOpen: boolea
 }
 
 export async function getUserStats() {
-  const res = await fetch(`${API_BASE}/auth/stats`, {
+  const res = await apiFetch(`/auth/stats`, {
     credentials: "include",
   });
   return handleResponse(res);

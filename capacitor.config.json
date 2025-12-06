@@ -1,6 +1,6 @@
 {
   "appId": "com.example.kyc",
   "appName": "kyc-app",
-  "webDir": "dist",
+  "webDir": "dist/public",
   "bundledWebRuntime": false
 }
