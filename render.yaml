@@ -1,6 +1,6 @@
 services:
   # PostgreSQL Database
-  - type: pserv
+  - type: postgres
     name: kyc-db
     plan: free
     ipAllowList: []
